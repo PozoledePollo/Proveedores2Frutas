@@ -37,6 +37,7 @@
             <select name="estado">
                 <option value="Pendiente" <%= "Pendiente".equals(orden.getEstado()) ? "selected" : "" %>>Pendiente</option>
                 <option value="Procesada" <%= "Procesada".equals(orden.getEstado()) ? "selected" : "" %>>Procesada</option>
+                <option value="Cancelada" <%= "Completada".equals(orden.getEstado()) ? "selected" : "" %>>Completada</option>
                 <option value="Cancelada" <%= "Cancelada".equals(orden.getEstado()) ? "selected" : "" %>>Cancelada</option>
             </select>
             <label>Productos:</label>
