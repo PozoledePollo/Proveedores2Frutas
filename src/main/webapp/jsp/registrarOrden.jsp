@@ -1,12 +1,11 @@
 <%--
     Document   : registrarOrden
     Created on : Mar 15, 2025
-    Author     : bruni (mejorado)
+    Author     : bruni (mejorado, sin Proveedor)
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.mycompany.proveedoresfrutas2.model.Producto" %>
-<%@ page import="com.mycompany.proveedoresfrutas2.model.Proveedor" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page session="true" %>
@@ -19,8 +18,7 @@
         return;
     }
 
-    // Ejemplo de obtención de productos directamente en JSP (no recomendado en MVC estricto)
-    // Lo ideal: cargar la lista en un Servlet y enviarla a la JSP mediante request.setAttribute("productosDisponibles", lista)
+    // Cargar productos desde MongoDB
     List<Producto> productosDisponibles = new ArrayList<>();
     com.mongodb.client.MongoCollection<org.bson.Document> productosCollection = 
         com.mycompany.proveedoresfrutas2.util.MongoDBConnection.getDatabase()
@@ -31,19 +29,6 @@
         p.setNombre(doc.getString("nombre"));
         p.setPrecio(doc.getDouble("precio"));
         productosDisponibles.add(p);
-    }
-
-    // Ejemplo de obtención de proveedores (opcional)
-    // Ajusta según tu lógica: MongoDB, JPA, o lo que uses para guardar proveedores
-    List<Proveedor> proveedoresDisponibles = new ArrayList<>();
-    com.mongodb.client.MongoCollection<org.bson.Document> proveedoresCollection = 
-        com.mycompany.proveedoresfrutas2.util.MongoDBConnection.getDatabase()
-                                                               .getCollection("proveedores");
-    for (org.bson.Document doc : proveedoresCollection.find()) {
-        Proveedor prov = new Proveedor();
-        prov.setId(doc.getObjectId("_id").toString());
-        prov.setNombre(doc.getString("nombre"));
-        proveedoresDisponibles.add(prov);
     }
 %>
 
@@ -69,15 +54,10 @@
         <!-- Formulario principal -->
         <form action="${pageContext.request.contextPath}/OrdenCompraServlet" method="post">
             <input type="hidden" name="accion" value="registrar">
-
-            <!-- Selección de proveedor (opcional) -->
-            <label for="proveedor">Proveedor:</label>
-            <select id="proveedor" name="proveedorId" required>
-                <option value="">Seleccione un proveedor</option>
-                <% for (Proveedor prov : proveedoresDisponibles) { %>
-                    <option value="<%= prov.getId() %>"><%= prov.getNombre() %></option>
-                <% } %>
-            </select>
+            
+            <!-- Proveedor: se muestra de forma estática -->
+            <label>Proveedor:</label>
+            <input type="text" value="Proveedor 1" readonly>
             <br><br>
 
             <!-- Lista de productos disponibles -->
@@ -88,18 +68,10 @@
                         Producto p = productosDisponibles.get(i);
                     %>
                     <div class="producto-item">
-                        <!-- 
-                            name="productoId" es un arreglo de checkboxes
-                            Si se marcan varios, en el Servlet se obtienen con request.getParameterValues("productoId")
-                         -->
-                        <input type="checkbox" name="productoId" value="<%= p.getId() %>" id="prodChk<%=i%>">
-                        <label for="prodChk<%=i%>">
+                        <input type="checkbox" name="productoId" value="<%= p.getId() %>" id="prodChk<%= i %>">
+                        <label for="prodChk<%= i %>">
                             <%= p.getNombre() %> - $<%= String.format("%.2f", p.getPrecio()) %>/kg
                         </label>
-                        <!-- 
-                            name="cantidad" también es un arreglo. Se deben alinear los índices en el Servlet
-                            para que coincidan con los productos seleccionados.
-                         -->
                         <input type="number" name="cantidad" min="1" placeholder="Cantidad" disabled>
                     </div>
                     <% } %>
