@@ -1,51 +1,88 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.mycompany.proveedoresfrutas2.servlet.LoginServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/LoginServlet</url-pattern>
-    </servlet-mapping>
 
+    <!-- Registro del Filtro de Autenticación -->
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>com.mycompany.proveedoresfrutas2.config.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/mainPanel</url-pattern>
+        <url-pattern>/products.jsp</url-pattern>
+        <url-pattern>/products/*</url-pattern>
+        <url-pattern>/ordenes</url-pattern>
+        <url-pattern>/ordenes/update</url-pattern>
+        <url-pattern>/ordenes/accept</url-pattern> <!-- Agregar /orders/accept al filtro -->
+        <url-pattern>/ordenes/reject</url-pattern> <!-- Agregar /orders/reject al filtro -->
+        <url-pattern>/ordenes/audit</url-pattern>  <!-- Agregar /orders/audit al filtro -->
+    </filter-mapping>
+    
+    <!-- Registro del ImageServlet -->
     <servlet>
-        <servlet-name>ProductoServlet</servlet-name>
-        <servlet-class>com.mycompany.proveedoresfrutas2.servlet.ProductoServlet</servlet-class>
+        <servlet-name>ImageServlet</servlet-name>
+        <servlet-class>com.mycompany.proveedoresfrutas2.controller.ImageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ProductoServlet</servlet-name>
-        <url-pattern>/ProductoServlet</url-pattern>
+        <servlet-name>ImageServlet</servlet-name>
+        <url-pattern>/image</url-pattern>
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>ImageServlet</servlet-name>
-        <servlet-class>com.mycompany.proveedoresfrutas2.servlet.ImageServlet</servlet-class>
+        <servlet-name>ProductApiController</servlet-name>
+        <servlet-class>com.mycompany.proveedoresfrutas2.controller.ProductApiController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>/ImageServlet</url-pattern>
+        <servlet-name>ProductApiController</servlet-name>
+        <url-pattern>/api/products</url-pattern>
     </servlet-mapping>
 
+    <!-- Registro del Servlet AuthController -->
     <servlet>
-        <servlet-name>OrdenCompraServlet</servlet-name>
-        <servlet-class>com.mycompany.proveedoresfrutas2.servlet.OrdenCompraServlet</servlet-class>
+        <servlet-name>AuthController</servlet-name>
+        <servlet-class>com.mycompany.proveedoresfrutas2.controller.AuthController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>OrdenCompraServlet</servlet-name>
-        <url-pattern>/OrdenCompraServlet</url-pattern>
+        <servlet-name>AuthController</servlet-name>
+        <url-pattern>/login</url-pattern>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
+    <!-- Registro del Servlet ProductController -->
+    <servlet>
+        <servlet-name>ProductController</servlet-name>
+        <servlet-class>com.mycompany.proveedoresfrutas2.controller.ProductController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductController</servlet-name>
+        <url-pattern>/mainPanel</url-pattern>
+        <url-pattern>/products</url-pattern>
+        <url-pattern>/products/add</url-pattern>
+        <url-pattern>/products/update</url-pattern>
+        <url-pattern>/products/delete</url-pattern>
+        <url-pattern>/ordenes</url-pattern>
+        <url-pattern>/ordenes/update</url-pattern>
+        <url-pattern>/ordenes/accept</url-pattern> <!-- Agregar /orders/accept -->
+        <url-pattern>/ordenes/reject</url-pattern> <!-- Agregar /orders/reject -->
+        <url-pattern>/ordenes/audit</url-pattern>  <!-- Agregar /orders/audit -->
+    </servlet-mapping>
     
+    <filter>
+        <filter-name>LoginAccessFilter</filter-name>
+        <filter-class>com.mycompany.proveedoresfrutas2.config.LoginAccessFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginAccessFilter</filter-name>
+        <url-pattern>/index.jsp</url-pattern>
+        <url-pattern>/login</url-pattern>
+    </filter-mapping>
 
+    <!-- Definir página de inicio -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
