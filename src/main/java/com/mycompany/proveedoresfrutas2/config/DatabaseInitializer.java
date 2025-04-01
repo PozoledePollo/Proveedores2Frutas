@@ -1,4 +1,4 @@
-package com.mycompany.proveedoresfrutas2.config;
+ package com.mycompany.proveedoresfrutas2.config;
 
 import com.mongodb.client.MongoDatabase;
 import jakarta.servlet.ServletContextEvent;
